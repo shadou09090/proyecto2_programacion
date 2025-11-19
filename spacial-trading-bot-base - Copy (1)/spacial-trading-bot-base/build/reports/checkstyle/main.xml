@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.12.4">
+<file name="/Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/util/ConfigLoader.java">
+</file>
+<file name="/Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/config/Configuration.java">
+</file>
+<file name="/Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/Main.java">
+</file>
+<file name="/Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/exception/ConfiguracionInvalidaException.java">
+</file>
+</checkstyle>

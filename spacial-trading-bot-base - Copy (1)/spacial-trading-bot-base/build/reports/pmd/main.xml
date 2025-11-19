@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd" version="6.55.0" timestamp="2025-11-09T21:59:35.958">
+<error filename="/Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/Main.java" msg="PMDException: Error while processing /Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/Main.java">
+<![CDATA[net.sourceforge.pmd.PMDException: Error while processing /Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/Main.java
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCodeWithoutCache(SourceCodeProcessor.java:128)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCode(SourceCodeProcessor.java:100)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCode(SourceCodeProcessor.java:62)
+	at net.sourceforge.pmd.processor.PmdRunnable.call(PmdRunnable.java:89)
+	at net.sourceforge.pmd.processor.PmdRunnable.call(PmdRunnable.java:30)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 69
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:199)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:180)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:166)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:287)
+	at net.sourceforge.pmd.lang.java.typeresolution.PMDASMClassLoader.getImportedClasses(PMDASMClassLoader.java:118)
+	at net.sourceforge.pmd.lang.java.typeresolution.ClassTypeResolver.populateClassName(ClassTypeResolver.java:1643)
+	at net.sourceforge.pmd.lang.java.typeresolution.ClassTypeResolver.visit(ClassTypeResolver.java:216)
+	at net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit.jjtAccept(ASTCompilationUnit.java:44)
+	at net.sourceforge.pmd.lang.java.typeresolution.TypeResolutionFacade.initializeWith(TypeResolutionFacade.java:21)
+	at net.sourceforge.pmd.lang.java.AbstractJavaHandler$5.start(AbstractJavaHandler.java:121)
+	at net.sourceforge.pmd.SourceCodeProcessor.usesTypeResolution(SourceCodeProcessor.java:178)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSource(SourceCodeProcessor.java:205)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCodeWithoutCache(SourceCodeProcessor.java:118)
+	... 10 more
+]]>
+</error>
+<error filename="/Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/config/Configuration.java" msg="PMDException: Error while processing /Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/config/Configuration.java">
+<![CDATA[net.sourceforge.pmd.PMDException: Error while processing /Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/config/Configuration.java
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCodeWithoutCache(SourceCodeProcessor.java:128)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCode(SourceCodeProcessor.java:100)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCode(SourceCodeProcessor.java:62)
+	at net.sourceforge.pmd.processor.PmdRunnable.call(PmdRunnable.java:89)
+	at net.sourceforge.pmd.processor.PmdRunnable.call(PmdRunnable.java:30)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 69
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:199)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:180)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:166)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:287)
+	at net.sourceforge.pmd.lang.java.typeresolution.PMDASMClassLoader.getImportedClasses(PMDASMClassLoader.java:118)
+	at net.sourceforge.pmd.lang.java.typeresolution.ClassTypeResolver.populateClassName(ClassTypeResolver.java:1643)
+	at net.sourceforge.pmd.lang.java.typeresolution.ClassTypeResolver.visit(ClassTypeResolver.java:216)
+	at net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit.jjtAccept(ASTCompilationUnit.java:44)
+	at net.sourceforge.pmd.lang.java.typeresolution.TypeResolutionFacade.initializeWith(TypeResolutionFacade.java:21)
+	at net.sourceforge.pmd.lang.java.AbstractJavaHandler$5.start(AbstractJavaHandler.java:121)
+	at net.sourceforge.pmd.SourceCodeProcessor.usesTypeResolution(SourceCodeProcessor.java:178)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSource(SourceCodeProcessor.java:205)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCodeWithoutCache(SourceCodeProcessor.java:118)
+	... 10 more
+]]>
+</error>
+<error filename="/Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/exception/ConfiguracionInvalidaException.java" msg="PMDException: Error while processing /Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/exception/ConfiguracionInvalidaException.java">
+<![CDATA[net.sourceforge.pmd.PMDException: Error while processing /Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/exception/ConfiguracionInvalidaException.java
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCodeWithoutCache(SourceCodeProcessor.java:128)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCode(SourceCodeProcessor.java:100)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCode(SourceCodeProcessor.java:62)
+	at net.sourceforge.pmd.processor.PmdRunnable.call(PmdRunnable.java:89)
+	at net.sourceforge.pmd.processor.PmdRunnable.call(PmdRunnable.java:30)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 69
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:199)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:180)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:166)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:287)
+	at net.sourceforge.pmd.lang.java.typeresolution.PMDASMClassLoader.getImportedClasses(PMDASMClassLoader.java:118)
+	at net.sourceforge.pmd.lang.java.typeresolution.ClassTypeResolver.populateClassName(ClassTypeResolver.java:1643)
+	at net.sourceforge.pmd.lang.java.typeresolution.ClassTypeResolver.visit(ClassTypeResolver.java:216)
+	at net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit.jjtAccept(ASTCompilationUnit.java:44)
+	at net.sourceforge.pmd.lang.java.typeresolution.TypeResolutionFacade.initializeWith(TypeResolutionFacade.java:21)
+	at net.sourceforge.pmd.lang.java.AbstractJavaHandler$5.start(AbstractJavaHandler.java:121)
+	at net.sourceforge.pmd.SourceCodeProcessor.usesTypeResolution(SourceCodeProcessor.java:178)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSource(SourceCodeProcessor.java:205)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCodeWithoutCache(SourceCodeProcessor.java:118)
+	... 10 more
+]]>
+</error>
+<error filename="/Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/util/ConfigLoader.java" msg="PMDException: Error while processing /Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/util/ConfigLoader.java">
+<![CDATA[net.sourceforge.pmd.PMDException: Error while processing /Users/santiago.chaustregladly.com/Git/Personal/stock-market/sdk/java/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/util/ConfigLoader.java
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCodeWithoutCache(SourceCodeProcessor.java:128)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCode(SourceCodeProcessor.java:100)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCode(SourceCodeProcessor.java:62)
+	at net.sourceforge.pmd.processor.PmdRunnable.call(PmdRunnable.java:89)
+	at net.sourceforge.pmd.processor.PmdRunnable.call(PmdRunnable.java:30)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.lang.IllegalArgumentException: Unsupported class file major version 69
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:199)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:180)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:166)
+	at org.objectweb.asm.ClassReader.<init>(ClassReader.java:287)
+	at net.sourceforge.pmd.lang.java.typeresolution.PMDASMClassLoader.getImportedClasses(PMDASMClassLoader.java:118)
+	at net.sourceforge.pmd.lang.java.typeresolution.ClassTypeResolver.populateClassName(ClassTypeResolver.java:1643)
+	at net.sourceforge.pmd.lang.java.typeresolution.ClassTypeResolver.visit(ClassTypeResolver.java:216)
+	at net.sourceforge.pmd.lang.java.ast.ASTCompilationUnit.jjtAccept(ASTCompilationUnit.java:44)
+	at net.sourceforge.pmd.lang.java.typeresolution.TypeResolutionFacade.initializeWith(TypeResolutionFacade.java:21)
+	at net.sourceforge.pmd.lang.java.AbstractJavaHandler$5.start(AbstractJavaHandler.java:121)
+	at net.sourceforge.pmd.SourceCodeProcessor.usesTypeResolution(SourceCodeProcessor.java:178)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSource(SourceCodeProcessor.java:205)
+	at net.sourceforge.pmd.SourceCodeProcessor.processSourceCodeWithoutCache(SourceCodeProcessor.java:118)
+	... 10 more
+]]>
+</error>
+</pmd>
