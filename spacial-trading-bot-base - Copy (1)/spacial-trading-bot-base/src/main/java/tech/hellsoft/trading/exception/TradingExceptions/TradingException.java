@@ -4,6 +4,6 @@ public abstract class TradingException extends RuntimeException {
     public TradingException(String message) {
 
 
-        super(message);
+        super("message");
     }
 }
