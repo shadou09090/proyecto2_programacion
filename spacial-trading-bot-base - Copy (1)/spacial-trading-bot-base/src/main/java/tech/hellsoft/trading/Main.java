@@ -1,5 +1,6 @@
 package tech.hellsoft.trading;
 
+
 import java.util.Scanner;
 import tech.hellsoft.trading.config.Configuration;
 import tech.hellsoft.trading.util.ConfigLoader;
@@ -23,6 +24,8 @@ import tech.hellsoft.trading.dto.server.BroadcastNotificationMessage;
 public final class Main {
 
   private Main() {
+
+
   }
 
   private static boolean running = true;
