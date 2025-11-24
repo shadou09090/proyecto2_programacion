@@ -6,4 +6,7 @@ public class SaldoInsuficienteException extends TradingException {
     }
 
 
+    public SaldoInsuficienteException(double saldo, double costo) {
+        super("G");
+    }
 }

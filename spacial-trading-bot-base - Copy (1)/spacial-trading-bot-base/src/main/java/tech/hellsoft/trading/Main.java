@@ -3,6 +3,8 @@ package tech.hellsoft.trading;
 
 import java.util.Map;
 import java.util.Scanner;
+
+import tech.hellsoft.trading.Cliente.EstadoCliente;
 import tech.hellsoft.trading.config.Configuration;
 import tech.hellsoft.trading.dto.server.BalanceUpdateMessage;
 import tech.hellsoft.trading.dto.server.BroadcastNotificationMessage;
@@ -398,7 +400,7 @@ public final class Main {
 
     private final Map<String, PriceSnapshot> precios = new java.util.HashMap<>();
     private final Map<String, OfferMessage> ofertasPendientes = new java.util.LinkedHashMap<>();
-    private final tech.hellsoft.trading.modelo.EstadoCliente estado = new tech.hellsoft.trading.modelo.EstadoCliente();
+    private final EstadoCliente estado = new EstadoCliente();
     private Rol rol = new Rol(10.0, 2, 0.8, 2.0, 3);
 
     MyTradingBot() {

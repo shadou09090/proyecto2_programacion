@@ -1,4 +1,7 @@
-package tech.hellsoft.trading.modelo;
+package tech.hellsoft.trading.Cliente;
+
+import tech.hellsoft.trading.modelo.Receta;
+import tech.hellsoft.trading.modelo.Rol;
 
 import java.io.Serializable;
 import java.util.ArrayList;

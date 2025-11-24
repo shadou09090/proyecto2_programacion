@@ -16,7 +16,7 @@ public class ConsolaInteractiva {
                 switch (comando) {
                     case "login": /* ... */ break;
                     case "status": /* ... */ break;
-// ... más casos
+
                 }
             } catch (Exception e) {
                 System.out.println("❌ " + e.getMessage());

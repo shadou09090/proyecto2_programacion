@@ -12,7 +12,6 @@ import tech.hellsoft.trading.exception.ProduccionException.RecetaNoEncontradaExc
 import tech.hellsoft.trading.exception.TradingExceptions.InventarioInsuficienteException;
 import tech.hellsoft.trading.exception.TradingExceptions.ProductoNoAutorizadoException;
 import tech.hellsoft.trading.exception.TradingExceptions.SaldoInsuficienteException;
-import tech.hellsoft.trading.modelo.EstadoCliente;
 
 public class ClienteBolsa implements EventListener {
 
@@ -161,11 +160,12 @@ public class ClienteBolsa implements EventListener {
         int unidades = 1;
         estado.getInventario().merge(producto, unidades, Integer::sum);
 
-        System.out.println("🏭 Producción enviada (simulada): "
+        System.out.println("Producción enviada (simulada): "
                 + unidades + " de " + producto + (premium ? " (premium)" : ""));
     }
 
     public EstadoCliente getEstado() {
-    return estado;
+
+      return estado;
   }
 }
