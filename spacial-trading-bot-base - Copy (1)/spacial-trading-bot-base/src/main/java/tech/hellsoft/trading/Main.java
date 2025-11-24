@@ -398,7 +398,7 @@ public final class Main {
 
     private final Map<String, PriceSnapshot> precios = new java.util.HashMap<>();
     private final Map<String, OfferMessage> ofertasPendientes = new java.util.LinkedHashMap<>();
-    private final tech.hellsoft.trading.Cliente.EstadoCliente estado = new tech.hellsoft.trading.Cliente.EstadoCliente();
+    private final tech.hellsoft.trading.modelo.EstadoCliente estado = new tech.hellsoft.trading.modelo.EstadoCliente();
     private Rol rol = new Rol(10.0, 2, 0.8, 2.0, 3);
 
     MyTradingBot() {
