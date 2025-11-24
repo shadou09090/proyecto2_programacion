@@ -12,6 +12,7 @@ import tech.hellsoft.trading.exception.ProduccionException.RecetaNoEncontradaExc
 import tech.hellsoft.trading.exception.TradingExceptions.InventarioInsuficienteException;
 import tech.hellsoft.trading.exception.TradingExceptions.ProductoNoAutorizadoException;
 import tech.hellsoft.trading.exception.TradingExceptions.SaldoInsuficienteException;
+import tech.hellsoft.trading.modelo.EstadoCliente;
 
 public class ClienteBolsa implements EventListener {
 

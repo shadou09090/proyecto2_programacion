@@ -1,7 +1,7 @@
 package tech.hellsoft.trading;
 
 import tech.hellsoft.trading.Cliente.ClienteBolsa;
-import tech.hellsoft.trading.Cliente.EstadoCliente;
+import tech.hellsoft.trading.modelo.EstadoCliente;
 import tech.hellsoft.trading.modelo.Receta;
 import tech.hellsoft.trading.util.RecetaValidator;
 
