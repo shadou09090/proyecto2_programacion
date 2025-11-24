@@ -106,24 +106,65 @@ public class ClienteBolsa implements EventListener {
 
   // ========== MÉTODOS PÚBLICOS ==========
   public void comprar(String producto, int cantidad, String mensaje)
-      throws SaldoInsuficienteException {
-    // Validar saldo → lanzar excepción si falla
-    // Crear orden → enviar
+          throws SaldoInsuficienteException {
+
+      Double precio = estado.getPreciosActuales().get(producto);
+      if (precio == null) {
+          throw new RuntimeException("No hay precio actual para " + producto);
+      }
+
+      double costo = precio * cantidad * 1.05; // margen 5%
+
+      if (estado.getSaldo() < costo) {
+          throw new SaldoInsuficienteException(estado.getSaldo(), costo);
+      }
+
+      // Simulación de envío
+      System.out.println("Orden enviada al servidor (simulada): BUY "
+              + cantidad + " " + producto + " | mensaje=\"" + mensaje + "\"");
   }
 
-  public void vender(String producto, int cantidad, String mensaje)
-      throws InventarioInsuficienteException {
-    // Validar inventario → lanzar excepción si falla
-    // Crear orden → enviar
-  }
+    public void vender(String producto, int cantidad, String mensaje)
+            throws InventarioInsuficienteException {
 
-  public void producir(String producto, boolean premium)
-      throws ProductoNoAutorizadoException, RecetaNoEncontradaException,
-      IngredientesInsuficientesException {
-    // Validaciones → calcular → actualizar → notificar
-  }
+        int inv = estado.getInventario().getOrDefault(producto, 0);
 
-  public EstadoCliente getEstado() {
+        if (cantidad > inv) {
+            throw new InventarioInsuficienteException(producto, inv, cantidad);
+        }
+
+        // Simulación de envío
+        System.out.println("Orden enviada al servidor (simulada): SELL "
+                + cantidad + " " + producto + " | mensaje=\"" + mensaje + "\"");
+    }
+
+    public void producir(String producto, boolean premium)
+            throws ProductoNoAutorizadoException,
+            RecetaNoEncontradaException,
+            IngredientesInsuficientesException {
+
+        if (!estado.getProductosAutorizados().contains(producto)) {
+            throw new ProductoNoAutorizadoException(producto, estado.getProductosAutorizados());
+        }
+
+        var receta = estado.getRecetas().get(producto);
+        if (receta == null) {
+            throw new RecetaNoEncontradaException(producto);
+        }
+
+        if (premium) {
+            throw new IngredientesInsuficientesException(null, estado.getInventario());
+        }
+
+        // Producción simple (simulación)
+        int unidades = 1;
+        estado.getInventario().merge(producto, unidades, Integer::sum);
+
+        System.out.println("🏭 Producción enviada (simulada): "
+                + unidades + " de " + producto + (premium ? " (premium)" : ""));
+    }
+
+    public EstadoCliente getEstado() {
     return estado;
   }
 }
