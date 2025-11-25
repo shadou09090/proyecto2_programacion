@@ -1,7 +1,7 @@
 package tech.hellsoft.trading.util;
 
 import tech.hellsoft.trading.Cliente.EstadoCliente;
-import tech.hellsoft.trading.exception.SnapshotCorruptoException;
+import tech.hellsoft.trading.exception.ConfiguracionException.SnapshotCorruptoException;
 
 import java.io.*;
 
