@@ -387,6 +387,7 @@ public class ConsolaInteractiva {
             this.inventario = new HashMap<>(inventario);
             this.precios = new HashMap<>(precios);
             this.ofertas = new HashMap<>(ofertas);
+
             this.nextOfferId = nextOfferId;
         }
     }
