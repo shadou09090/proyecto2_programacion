@@ -28,6 +28,11 @@ public class ConectorBolsa {
         // Aquí no hacemos nada
     }
 
+    public void login(String apiKey, EventListener listener) {
+        Objects.requireNonNull(apiKey, "apiKey");
+        addListener(listener);
+    }
+
     // ─────────────────────────────────────────
     // MÉTODOS DE SIMULACIÓN DE EVENTOS
     // ─────────────────────────────────────────

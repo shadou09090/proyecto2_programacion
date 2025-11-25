@@ -106,7 +106,11 @@ public class ClienteBolsa implements EventListener {
     if (balanceUpdate == null) {
       return;
     }
-    estado.setSaldo(balanceUpdate.getBalance());
+    double balance = balanceUpdate.getBalance();
+    estado.setSaldo(balance);
+    if (estado.getSaldoInicial() == 0) {
+      estado.setSaldoInicial(balance);
+    }
   }
 
   @Override

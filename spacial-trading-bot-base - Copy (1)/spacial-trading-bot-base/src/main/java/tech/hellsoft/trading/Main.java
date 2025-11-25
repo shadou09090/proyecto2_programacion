@@ -38,6 +38,7 @@ public final class Main {
 
             System.out.println("🔌 Connecting to: " + config.host());
             connector.conectar(config.host(), config.apiKey());
+            connector.login(config.apiKey(), cliente);
             System.out.println("✅ Conectado. Esperando eventos de login...");
             System.out.println();
 
@@ -295,9 +296,9 @@ public final class Main {
         try {
             cliente.producir(producto, premium);
         } catch (ProductoNoAutorizadoException e) {
-            System.out.println("❌ Producto no autorizado: " );
+            System.out.println("❌ Producto no autorizado: " + e.getProducto());
         } catch (RecetaNoEncontradaException e) {
-            System.out.println("❌ No se encontró la receta para " );
+            System.out.println("❌ No se encontró la receta para " + e.getProducto());
         } catch (IngredientesInsuficientesException e) {
             System.out.println("❌ Ingredientes insuficientes para producción premium");
         }
