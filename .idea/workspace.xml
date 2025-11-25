@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9aa602f5-e7ab-4c96-acdc-bf1a0f1b7bb2" name="Changes" comment="s">
-      <change beforePath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/build/classes/java/main/tech/hellsoft/trading/Main$MyTradingBot.class" beforeDir="false" afterPath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/build/classes/java/main/tech/hellsoft/trading/Main$MyTradingBot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/build/classes/java/main/tech/hellsoft/trading/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/build/classes/java/main/tech/hellsoft/trading/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/spacial-trading-bot-base - Copy (1)/spacial-trading-bot-base/src/main/java/tech/hellsoft/trading/Main.java" afterDir="false" />
-    </list>
+    <list default="true" id="9aa602f5-e7ab-4c96-acdc-bf1a0f1b7bb2" name="Changes" comment="s" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,12 +19,12 @@
     &quot;assignee&quot;: &quot;shadou09090&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:shadou09090/proyecto2_programacion.git&quot;,
-    &quot;accountId&quot;: &quot;878e3867-83da-4237-9e97-e1405db593d5&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/shadou09090/proyecto2_programacion.git",
+    "accountId": "feb7a540-74ff-4806-b6aa-bd7393d64e6f"
   }
-}</component>
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/hola.java" root0="SKIP_INSPECTION" />
   </component>
@@ -73,17 +66,6 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="proyecto_progra-final" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="proyecto_progra-final" />
-      <option name="filePath" />
-      <method v="2" />
-    </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="proyecto_progra-final" />
       <option name="ENV_FILES" value="" />
@@ -134,12 +116,23 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="proyecto_progra-final" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="proyecto_progra-final" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
-        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26199.169" />
+        <option value="bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-IU-252.26199.169" />
       </set>
     </attachedChunks>
   </component>
@@ -154,6 +147,7 @@
       <workItem from="1762137419795" duration="1747000" />
       <workItem from="1763556771933" duration="260000" />
       <workItem from="1763858439955" duration="52000" />
+      <workItem from="1764001633785" duration="45000" />
     </task>
     <task id="LOCAL-00001" summary="s">
       <option name="closed" value="true" />

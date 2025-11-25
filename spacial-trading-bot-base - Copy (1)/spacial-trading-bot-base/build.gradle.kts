@@ -11,9 +11,20 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/HellSoft-Col/stock-market")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
+    // Hellsoft SDK - Ready when available
+    implementation("tech.hellsoft.trading:websocket-client:1.1.3")
+
     // GSON for JSON processing
     implementation("com.google.code.gson:gson:2.10.1")
 
@@ -22,6 +33,10 @@ dependencies {
 
     // Yavi for validation
     implementation("am.ik.yavi:yavi:0.13.0")
+
+    // Lombok for boilerplate reduction
+    compileOnly("org.projectlombok:lombok:1.18.40")
+    annotationProcessor("org.projectlombok:lombok:1.18.40")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -33,7 +48,7 @@ application {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 

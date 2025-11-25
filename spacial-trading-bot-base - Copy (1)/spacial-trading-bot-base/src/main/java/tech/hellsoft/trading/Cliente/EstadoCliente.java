@@ -1,14 +1,17 @@
 package tech.hellsoft.trading.Cliente;
 
+import tech.hellsoft.trading.modelo.Receta;
+import tech.hellsoft.trading.modelo.Rol;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import tech.hellsoft.trading.modelo.Receta;
-import tech.hellsoft.trading.modelo.Rol;
 
 public class EstadoCliente implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   private double saldo;
   private double saldoInicial;
