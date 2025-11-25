@@ -1,13 +1,13 @@
 package tech.hellsoft.trading.Cliente;
 
-import tech.hellsoft.trading.modelo.Receta;
-import tech.hellsoft.trading.modelo.Rol;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import tech.hellsoft.trading.dto.server.TickerMessage;
+import tech.hellsoft.trading.modelo.Receta;
+import tech.hellsoft.trading.modelo.Rol;
 
 public class EstadoCliente implements Serializable {
 
@@ -17,19 +17,29 @@ public class EstadoCliente implements Serializable {
   private double saldoInicial;
   private final Map<String, Integer> inventario = new HashMap<>();
   private final Map<String, Double> preciosActuales = new HashMap<>();
+  private final Map<String, TickerMessage> ultimosTickers = new HashMap<>();
   private final Map<String, Receta> recetas = new HashMap<>();
   private Rol rol;
   private final List<String> productosAutorizados = new ArrayList<>();
 
-  public double calcularPL() {
+  public double calcularValorInventario() {
     double valorInventario = 0.0;
     for (Map.Entry<String, Integer> entry : inventario.entrySet()) {
       double precio = preciosActuales.getOrDefault(entry.getKey(), 0.0);
       valorInventario += entry.getValue() * precio;
     }
-    double patrimonioNeto = saldo + valorInventario;
-    System.out.println("Patrimonio Neto: " + patrimonioNeto);
-    return ((patrimonioNeto - saldoInicial) / saldoInicial) * 100.0;
+    return valorInventario;
+  }
+
+  public double calcularPatrimonioNeto() {
+    return saldo + calcularValorInventario();
+  }
+
+  public double calcularPLPorcentaje() {
+    if (saldoInicial == 0) {
+      return 0.0;
+    }
+    return ((calcularPatrimonioNeto() - saldoInicial) / saldoInicial) * 100.0;
   }
 
   public double getSaldo() {
@@ -60,6 +70,10 @@ public class EstadoCliente implements Serializable {
     return recetas;
   }
 
+  public Map<String, TickerMessage> getUltimosTickers() {
+    return ultimosTickers;
+  }
+
   public Rol getRol() {
     return rol;
   }
@@ -79,23 +93,26 @@ public class EstadoCliente implements Serializable {
     }
     this.productosAutorizados.addAll(productosAutorizados);
   }
-    public void copiarDesde(EstadoCliente otro) {
-        this.saldo = otro.saldo;
-        this.saldoInicial = otro.saldoInicial;
 
-        this.inventario.clear();
-        this.inventario.putAll(otro.inventario);
+  public void copiarDesde(EstadoCliente otro) {
+    this.saldo = otro.saldo;
+    this.saldoInicial = otro.saldoInicial;
 
-        this.preciosActuales.clear();
-        this.preciosActuales.putAll(otro.preciosActuales);
+    this.inventario.clear();
+    this.inventario.putAll(otro.inventario);
 
-        this.recetas.clear();
-        this.recetas.putAll(otro.recetas);
+    this.preciosActuales.clear();
+    this.preciosActuales.putAll(otro.preciosActuales);
 
-        this.productosAutorizados.clear();
-        this.productosAutorizados.addAll(otro.productosAutorizados);
+    this.recetas.clear();
+    this.recetas.putAll(otro.recetas);
 
-        this.rol = otro.rol;
-    }
+    this.productosAutorizados.clear();
+    this.productosAutorizados.addAll(otro.productosAutorizados);
 
+    this.rol = otro.rol;
+
+    this.ultimosTickers.clear();
+    this.ultimosTickers.putAll(otro.ultimosTickers);
+  }
 }
