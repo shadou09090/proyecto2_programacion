@@ -3,34 +3,41 @@ package tech.hellsoft.trading.util;
 import tech.hellsoft.trading.modelo.Rol;
 
 public class CalculadoraProduccion {
-    /**
-     * Calcula las unidades producidas usando recursión.
-     */
+
+
+     // Calcula la producción total usando recursión.//
     public static int calcularUnidades(Rol rol) {
+        if (rol == null) {
+            return 0;
+        }
         return calcularRecursivo(0, rol);
     }
-    /**
-     * Función recursiva que suma contribuciones de cada nivel.
-     */
+
+    //Función recursiva que suma las contribuciones de cada nivel//
+
     private static int calcularRecursivo(int nivel, Rol rol) {
-// ⚠ CASO BASE: Profundidad máxima alcanzada
+
+        // Caso base: profundidad máxima alcanzada
         if (nivel > rol.getMaxDepth()) {
             return 0;
         }
-// Calcular energía en este nivel
+
+        // Energía en este nivel
         double energia = rol.getBaseEnergy() + rol.getLevelEnergy() * nivel;
-// Calcular factor multiplicador
-        double decay = Math.pow(rol.getDecay(), nivel);
-        double branches = Math.pow(rol.getBranches(), nivel);
-        double factor = decay * branches;
-// Contribución de este nivel
+
+        // Factor multiplicador: decay^nivel × branches^nivel
+        double decayPow = Math.pow(rol.getDecay(), nivel);
+        double branchesPow = Math.pow(rol.getBranches(), nivel);
+        double factor = decayPow * branchesPow;
+
+        // Contribución del nivel actual
         int contribucion = (int) Math.round(energia * factor);
-// 🔄 CASO RECURSIVO: Sumar contribuciones de niveles inferiores
+
+        // Recursión: sumar con los niveles siguientes
         return contribucion + calcularRecursivo(nivel + 1, rol);
     }
-    /**
-     * Aplica el bonus de producción premium (+30%).
-     */
+
+    //Aplica el bonus premium (ej. 1.30 para +30%)//
     public static int aplicarBonusPremium(int unidadesBase, double bonus) {
         return (int) Math.round(unidadesBase * bonus);
     }

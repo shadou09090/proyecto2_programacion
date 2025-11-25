@@ -34,4 +34,6 @@ public interface EventListener {
   void onBroadcast(BroadcastNotificationMessage broadcast);
 
   void onConnectionLost(Throwable throwable);
+
+
 }
