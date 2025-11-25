@@ -15,4 +15,17 @@ public record Configuration(String apiKey, String team, String host) implements 
       throw new IllegalArgumentException("Host cannot be null or blank");
     }
   }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public String getHost() {
+        return host;
+    }
 }
+

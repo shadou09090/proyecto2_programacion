@@ -2,78 +2,89 @@ package tech.hellsoft.trading;
 
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import tech.hellsoft.trading.eventos.EventListener;
-import tech.hellsoft.trading.dto.server.BalanceUpdateMessage;
-import tech.hellsoft.trading.dto.server.BroadcastNotificationMessage;
-import tech.hellsoft.trading.dto.server.ErrorMessage;
-import tech.hellsoft.trading.dto.server.EventDeltaMessage;
-import tech.hellsoft.trading.dto.server.FillMessage;
-import tech.hellsoft.trading.dto.server.InventoryUpdateMessage;
-import tech.hellsoft.trading.dto.server.LoginOKMessage;
-import tech.hellsoft.trading.dto.server.OfferMessage;
-import tech.hellsoft.trading.dto.server.OrderAckMessage;
-import tech.hellsoft.trading.dto.server.TickerMessage;
+import tech.hellsoft.trading.dto.server.*;
 
 /**
- * Stub connector that simulates the SDK client.
- *
- * The class provides minimal no-op implementations so the sample code can compile
- * without the real dependency.
+ * Stub del SDK oficial.
+ * No contiene lógica, solo reenvía callbacks simulados.
  */
 public class ConectorBolsa {
 
-  private final CopyOnWriteArrayList<EventListener> listeners = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<EventListener> listeners = new CopyOnWriteArrayList<>();
 
-  public void addListener(EventListener listener) {
-    if (listener == null) {
-      return;
+    public void addListener(EventListener listener) {
+        if (listener != null) {
+            listeners.addIfAbsent(listener);
+        }
     }
-    listeners.addIfAbsent(listener);
-  }
 
-  public void conectar(String host, String apiKey) {
-    Objects.requireNonNull(host, "host");
-    Objects.requireNonNull(apiKey, "apiKey");
-  }
+    public void conectar(String host, String apiKey) {
+        Objects.requireNonNull(host, "host");
+        Objects.requireNonNull(apiKey, "apiKey");
 
-  // ===== Simulation helpers =====
-  public void simulateLogin(LoginOKMessage login) {
-    listeners.forEach(listener -> listener.onLoginOk(login));
-  }
+        // En un SDK real se enviaría INIT + LOGIN
+        // Aquí no hacemos nada
+    }
 
-  public void simulateTicker(TickerMessage ticker) {
-    listeners.forEach(listener -> listener.onTicker(ticker));
-  }
+    // ─────────────────────────────────────────
+    // MÉTODOS DE SIMULACIÓN DE EVENTOS
+    // ─────────────────────────────────────────
 
-  public void simulateFill(FillMessage fill) {
-    listeners.forEach(listener -> listener.onFill(fill));
-  }
+    public void simulateLogin(LoginOKMessage login) {
+        listeners.forEach(l -> l.onLoginOk(login));
+    }
 
-  public void simulateOffer(OfferMessage offer) {
-    listeners.forEach(listener -> listener.onOffer(offer));
-  }
+    public void simulateTicker(TickerMessage ticker) {
+        listeners.forEach(l -> l.onTicker(ticker));
+    }
 
-  public void simulateOrderAck(OrderAckMessage orderAck) {
-    listeners.forEach(listener -> listener.onOrderAck(orderAck));
-  }
+    public void simulateFill(FillMessage fill) {
+        listeners.forEach(l -> l.onFill(fill));
+    }
 
-  public void simulateBalanceUpdate(BalanceUpdateMessage balanceUpdate) {
-    listeners.forEach(listener -> listener.onBalanceUpdate(balanceUpdate));
-  }
+    public void simulateOffer(OfferMessage offer) {
+        listeners.forEach(l -> l.onOffer(offer));
+    }
 
-  public void simulateInventoryUpdate(InventoryUpdateMessage inventoryUpdate) {
-    listeners.forEach(listener -> listener.onInventoryUpdate(inventoryUpdate));
-  }
+    public void simulateOrderAck(OrderAckMessage ack) {
+        listeners.forEach(l -> l.onOrderAck(ack));
+    }
 
-  public void simulateEventDelta(EventDeltaMessage eventDelta) {
-    listeners.forEach(listener -> listener.onEventDelta(eventDelta));
-  }
+    public void simulateBalanceUpdate(BalanceUpdateMessage msg) {
+        listeners.forEach(l -> l.onBalanceUpdate(msg));
+    }
 
-  public void simulateBroadcast(BroadcastNotificationMessage broadcast) {
-    listeners.forEach(listener -> listener.onBroadcast(broadcast));
-  }
+    public void simulateInventoryUpdate(InventoryUpdateMessage msg) {
+        listeners.forEach(l -> l.onInventoryUpdate(msg));
+    }
 
-  public void simulateDisconnect(Throwable throwable) {
-    listeners.forEach(listener -> listener.onConnectionLost(throwable));
-  }
+    public void simulateEventDelta(EventDeltaMessage msg) {
+        listeners.forEach(l -> l.onEventDelta(msg));
+    }
+
+    public void simulateBroadcast(BroadcastNotificationMessage msg) {
+        listeners.forEach(l -> l.onBroadcast(msg));
+    }
+
+    public void simulateDisconnect(Throwable cause) {
+        listeners.forEach(l -> l.onConnectionLost(cause));
+    }
+
+    // ─────────────────────────────────────────
+    // COMANDOS SIMULADOS
+    // ─────────────────────────────────────────
+
+    public void aceptarOferta(String id) {
+        BroadcastNotificationMessage m = new BroadcastNotificationMessage();
+        m.setMessage("Oferta " + id + " aceptada");
+        simulateBroadcast(m);
+    }
+
+    public void rechazarOferta(String id) {
+        BroadcastNotificationMessage m = new BroadcastNotificationMessage();
+        m.setMessage("Oferta " + id + " rechazada");
+        simulateBroadcast(m);
+    }
 }

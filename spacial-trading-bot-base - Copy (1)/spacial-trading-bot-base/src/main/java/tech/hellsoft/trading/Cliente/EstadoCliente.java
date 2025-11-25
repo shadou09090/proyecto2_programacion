@@ -28,6 +28,7 @@ public class EstadoCliente implements Serializable {
       valorInventario += entry.getValue() * precio;
     }
     double patrimonioNeto = saldo + valorInventario;
+    System.out.println("Patrimonio Neto: " + patrimonioNeto);
     return ((patrimonioNeto - saldoInicial) / saldoInicial) * 100.0;
   }
 
@@ -78,4 +79,23 @@ public class EstadoCliente implements Serializable {
     }
     this.productosAutorizados.addAll(productosAutorizados);
   }
+    public void copiarDesde(EstadoCliente otro) {
+        this.saldo = otro.saldo;
+        this.saldoInicial = otro.saldoInicial;
+
+        this.inventario.clear();
+        this.inventario.putAll(otro.inventario);
+
+        this.preciosActuales.clear();
+        this.preciosActuales.putAll(otro.preciosActuales);
+
+        this.recetas.clear();
+        this.recetas.putAll(otro.recetas);
+
+        this.productosAutorizados.clear();
+        this.productosAutorizados.addAll(otro.productosAutorizados);
+
+        this.rol = otro.rol;
+    }
+
 }

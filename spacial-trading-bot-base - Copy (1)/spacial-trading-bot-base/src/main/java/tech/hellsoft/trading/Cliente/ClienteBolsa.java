@@ -13,17 +13,25 @@ import tech.hellsoft.trading.exception.TradingExceptions.InventarioInsuficienteE
 import tech.hellsoft.trading.exception.TradingExceptions.ProductoNoAutorizadoException;
 import tech.hellsoft.trading.exception.TradingExceptions.SaldoInsuficienteException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ClienteBolsa implements EventListener {
 
   private final ConectorBolsa conector;
   private final EstadoCliente estado;
+  private final Map<String, OfferMessage> ofertas = new HashMap<>();
 
-  public ClienteBolsa(ConectorBolsa conector) {
+
+    public ClienteBolsa(ConectorBolsa conector) {
     this.conector = conector;
     this.estado = new EstadoCliente();
   }
+    public void restaurarEstado(EstadoCliente nuevo) {
+        this.estado.copiarDesde(nuevo);
+    }
 
-  // ========== CALLBACKS DEL SDK ==========
+    // ========== CALLBACKS DEL SDK ==========
   @Override
   public void onLoginOk(LoginOKMessage msg) {
     if (msg == null) {
@@ -59,13 +67,14 @@ public class ClienteBolsa implements EventListener {
 
   @Override
   public void onOffer(OfferMessage offer) {
-    if (offer == null) {
-      return;
-    }
-    System.out.println("📨 Oferta recibida: " + offer);
+      if (offer == null) {
+          return;
+      }
+      ofertas.put(offer.getOfferId(), offer);
+      System.out.println("📨 Oferta recibida: " + offer.getOfferId());
   }
 
-  @Override
+    @Override
   public void onError(ErrorMessage error) {
     if (error == null) {
       return;
@@ -163,9 +172,37 @@ public class ClienteBolsa implements EventListener {
         System.out.println("Producción enviada (simulada): "
                 + unidades + " de " + producto + (premium ? " (premium)" : ""));
     }
+    // ========== OFERTAS ==========
+    public Map<String, OfferMessage> getOfertas() {
+        return ofertas;
+    }
+
+    public boolean tieneOferta(String id) {
+        return ofertas.containsKey(id);
+    }
+
+    public OfferMessage getOferta(String id) {
+        return ofertas.get(id);
+    }
+
+    public void aceptarOferta(String id) {
+        if (!ofertas.containsKey(id)) return;
+
+        conector.aceptarOferta(id);
+        System.out.println("Oferta aceptada: " + id);
+        ofertas.remove(id);
+    }
+
+    public void rechazarOferta(String id) {
+        if (!ofertas.containsKey(id)) return;
+
+        conector.rechazarOferta(id);
+        System.out.println("Oferta rechazada: " + id);
+        ofertas.remove(id);
+    }
+
 
     public EstadoCliente getEstado() {
-
       return estado;
-  }
+    }
 }

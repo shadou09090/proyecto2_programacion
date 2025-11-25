@@ -2,13 +2,19 @@ package tech.hellsoft.trading.dto.server;
 
 public class BroadcastNotificationMessage {
 
-  private final String message;
+    private String message;
 
-  public BroadcastNotificationMessage(String message) {
-    this.message = message;
-  }
+    public BroadcastNotificationMessage() {}
 
-  public String getMessage() {
-    return message;
-  }
+    public BroadcastNotificationMessage(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

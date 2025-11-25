@@ -1,11 +1,13 @@
 package tech.hellsoft.trading.Cliente;
 
 import java.util.*;
+import tech.hellsoft.trading.dto.server.OfferMessage;
 import tech.hellsoft.trading.exception.TradingExceptions.InventarioInsuficienteException;
 import tech.hellsoft.trading.exception.TradingExceptions.ProductoNoAutorizadoException;
 import tech.hellsoft.trading.exception.TradingExceptions.SaldoInsuficienteException;
 import tech.hellsoft.trading.exception.ProduccionException.IngredientesInsuficientesException;
 import tech.hellsoft.trading.exception.ProduccionException.RecetaNoEncontradaException;
+import tech.hellsoft.trading.util.SnapshotManager;
 
 public class ConsolaInteractiva {
 
@@ -32,6 +34,7 @@ public class ConsolaInteractiva {
 
             try {
                 switch (cmd) {
+
                     case "login":
                         handleLogin();
                         break;
@@ -60,18 +63,41 @@ public class ConsolaInteractiva {
                         handleProducir(tokens);
                         break;
 
+                    case "ofertas":
+                        handleOfertas();
+                        break;
+
+                    case "aceptar":
+                        handleAceptar(tokens);
+                        break;
+
+                    case "rechazar":
+                        handleRechazar(tokens, linea);
+                        break;
+
+                    case "snapshot":
+                        if (tokens.length < 2) {
+                            System.out.println("Uso: snapshot <save|load>");
+                            break;
+                        }
+                        if (tokens[1].equalsIgnoreCase("save")) handleSnapshotSave();
+                        else if (tokens[1].equalsIgnoreCase("load")) handleSnapshotLoad();
+                        else System.out.println("Uso: snapshot <save|load>");
+                        break;
+
                     case "ayuda":
                     case "help":
                         imprimirAyuda();
                         break;
 
                     case "exit":
-                        System.out.println("👋 Cerrando cliente...");
+                        System.out.println("Cerrando cliente...");
                         return;
 
                     default:
-                        System.out.println("❓ Comando desconocido. Usa 'ayuda'.");
+                        System.out.println("Comando desconocido. Usa 'ayuda'.");
                 }
+
             } catch (SaldoInsuficienteException |
                      InventarioInsuficienteException |
                      ProductoNoAutorizadoException |
@@ -86,13 +112,12 @@ public class ConsolaInteractiva {
         }
     }
 
-    // ─────────────────────────────
+    //─────────────────────────────
     // COMANDOS
-    // ─────────────────────────────
+    //─────────────────────────────
 
     private void handleLogin() {
-        // El login real lo hace ConectorBolsa → ClienteBolsa recibe callback
-        System.out.println("🔐 Esperando LOGIN_OK del servidor...");
+        System.out.println("Esperando LOGIN_OK del servidor...");
         System.out.println("Si tu conector está corriendo, el callback onLoginOk se ejecutará.");
     }
 
@@ -143,6 +168,42 @@ public class ConsolaInteractiva {
         est.getPreciosActuales().forEach((prod, precio) -> {
             System.out.printf("%s: %.2f%n", prod, precio);
         });
+    }
+
+    private void handleOfertas() {
+        Map<String, OfferMessage> ofertas = cliente.getOfertas();
+        if (ofertas.isEmpty()) {
+            System.out.println("No hay ofertas pendientes.");
+            return;
+        }
+
+        System.out.println("=== OFERTAS PENDIENTES ===");
+        ofertas.forEach((id, oferta) -> {
+            System.out.println(id + " -> " + oferta);
+        });
+    }
+
+    private void handleAceptar(String[] tokens) throws Exception {
+        if (tokens.length < 2) {
+            System.out.println("Uso: aceptar <offerId>");
+            return;
+        }
+        String id = tokens[1];
+        cliente.aceptarOferta(id);
+        System.out.println("✔ Oferta aceptada: " + id);
+    }
+
+    private void handleRechazar(String[] tokens, String linea) throws Exception {
+        if (tokens.length < 2) {
+            System.out.println("Uso: rechazar <offerId> [motivo]");
+            return;
+        }
+
+        String id = tokens[1];
+        String motivo = extraerMensaje(tokens, linea, 2);
+
+        cliente.rechazarOferta(id);
+        System.out.println("✔ Oferta rechazada: " + id);
     }
 
     private void handleComprar(String[] tokens, String linea)
@@ -196,6 +257,30 @@ public class ConsolaInteractiva {
         System.out.println("✔ Producción solicitada.");
     }
 
+    private void handleSnapshotSave() throws Exception {
+        System.out.print("Nombre del snapshot: ");
+        String nombre = scanner.nextLine().trim();
+
+        if (nombre.isEmpty()) nombre = "snapshot-" + System.currentTimeMillis();
+
+        SnapshotManager.guardar(cliente.getEstado(), nombre + ".bin");
+        System.out.println("✔ Snapshot guardado: " + nombre + ".bin");
+    }
+
+    private void handleSnapshotLoad() throws Exception {
+        System.out.print("Archivo snapshot a cargar: ");
+        String nombre = scanner.nextLine().trim();
+
+        var estadoCargado = SnapshotManager.cargar(nombre);
+        cliente.restaurarEstado(estadoCargado);
+
+        System.out.println("✔ Snapshot cargado: " + nombre);
+    }
+
+    //─────────────────────────────
+    // UTILIDAD
+    //─────────────────────────────
+
     private void imprimirAyuda() {
         System.out.println("=== Comandos disponibles ===");
         System.out.println(" login");
@@ -205,13 +290,14 @@ public class ConsolaInteractiva {
         System.out.println(" comprar <producto> <cantidad> [mensaje]");
         System.out.println(" vender <producto> <cantidad> [mensaje]");
         System.out.println(" producir <producto> <basico|premium>");
+        System.out.println(" ofertas");
+        System.out.println(" aceptar <id>");
+        System.out.println(" rechazar <id> [motivo]");
+        System.out.println(" snapshot save");
+        System.out.println(" snapshot load");
         System.out.println(" ayuda");
         System.out.println(" exit");
     }
-
-    // ─────────────────────────────
-    // UTILIDAD
-    // ─────────────────────────────
 
     private String extraerMensaje(String[] tokens, String linea, int start) {
         if (tokens.length <= start) return "";
