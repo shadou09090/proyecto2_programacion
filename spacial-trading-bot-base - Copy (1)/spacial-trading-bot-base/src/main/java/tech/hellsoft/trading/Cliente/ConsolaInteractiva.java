@@ -124,7 +124,7 @@ public class ConsolaInteractiva {
     private void handleStatus() {
         EstadoCliente est = cliente.getEstado();
         double saldo = est.getSaldo();
-        double pl = est.calcularPL();
+        double pl = est.calcularPLPorcentaje();
 
         double valorInv = 0;
         for (var e : est.getInventario().entrySet()) {
