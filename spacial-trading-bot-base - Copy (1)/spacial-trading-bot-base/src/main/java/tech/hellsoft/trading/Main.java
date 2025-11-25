@@ -296,9 +296,9 @@ public final class Main {
         try {
             cliente.producir(producto, premium);
         } catch (ProductoNoAutorizadoException e) {
-            System.out.println("❌ Producto no autorizado: " + e.getProducto());
+            System.out.println("❌ Producto no autorizado: " );
         } catch (RecetaNoEncontradaException e) {
-            System.out.println("❌ No se encontró la receta para " + e.getProducto());
+            System.out.println("❌ No se encontró la receta para " );
         } catch (IngredientesInsuficientesException e) {
             System.out.println("❌ Ingredientes insuficientes para producción premium");
         }
