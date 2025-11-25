@@ -1,63 +1,85 @@
-package tech.hellsoft.trading.util;
-
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import tech.hellsoft.trading.config.Configuration;
 import tech.hellsoft.trading.exception.ConfiguracionInvalidaException;
+import tech.hellsoft.trading.modelo.Receta;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 public final class ConfigLoader {
 
-  private static final Gson GSON = new Gson();
+    private static final Gson GSON = new Gson();
 
-  private ConfigLoader() {
-  }
-
-  public static Configuration load(String path) throws ConfiguracionInvalidaException {
-    if (path == null || path.isBlank()) {
-      throw new ConfiguracionInvalidaException("Configuration file path cannot be null or empty");
+    private ConfigLoader() {
     }
 
-    Path filePath = validatePath(path);
+    //Lee config.json y lo convierte en objeto Configuration//
+    public static Configuration cargarConfig(String archivo)
+            throws ConfiguracionInvalidaException {
 
-    try {
-      String json = Files.readString(filePath);
-      return parseConfiguration(json);
-    } catch (IOException e) {
-      throw new ConfiguracionInvalidaException("Failed to read configuration file: " + e.getMessage(), e);
-    }
-  }
+        String json = leerArchivo(archivo);
 
-  private static Path validatePath(String path) throws ConfiguracionInvalidaException {
-    Path filePath = Paths.get(path);
+        Configuration cfg;
+        try {
+            cfg = GSON.fromJson(json, Configuration.class);
+        } catch (Exception e) {
+            throw new ConfiguracionInvalidaException("JSON de configuración inválido", e);
+        }
 
-    if (!Files.exists(filePath)) {
-      throw new ConfiguracionInvalidaException("Configuration file not found: " + path);
-    }
+        // Validar campos obligatorios
+        if (cfg.getApiKey() == null || cfg.getApiKey().isBlank()) {
+            throw new ConfiguracionInvalidaException("apiKey faltante");
+        }
+        if (cfg.getEquipo() == null || cfg.getEquipo().isBlank()) {
+            throw new ConfiguracionInvalidaException("equipo faltante");
+        }
+        if (cfg.getHost() == null || cfg.getHost().isBlank()) {
+            throw new ConfiguracionInvalidaException("host faltante");
+        }
 
-    if (!Files.isReadable(filePath)) {
-      throw new ConfiguracionInvalidaException("Configuration file not readable: " + path);
-    }
-
-    if (!Files.isRegularFile(filePath)) {
-      throw new ConfiguracionInvalidaException("Configuration path is not a regular file: " + path);
-    }
-
-    return filePath;
-  }
-
-  private static Configuration parseConfiguration(String json) throws ConfiguracionInvalidaException {
-    if (json == null || json.isBlank()) {
-      throw new ConfiguracionInvalidaException("Configuration file content is empty");
+        return cfg;
     }
 
-    try {
-      return GSON.fromJson(json, Configuration.class);
-    } catch (Exception e) {
-      throw new ConfiguracionInvalidaException("Failed to parse configuration JSON: " + e.getMessage(), e);
+    //Carga recetas desde un archivo JSON y las convierte en un Map<String, Receta>//
+    public static Map<String, Receta> cargarRecetas(String archivo)
+            throws ConfiguracionInvalidaException {
+
+        String json = leerArchivo(archivo);
+
+        try {
+            Type type = new TypeToken<Map<String, Receta>>() {}.getType();
+            return GSON.fromJson(json, type);
+        } catch (Exception e) {
+            throw new ConfiguracionInvalidaException("JSON de recetas inválido", e);
+        }
     }
-  }
+
+    // Lee cualquier archivo de texto y devuelve su contenido//
+    private static String leerArchivo(String archivo)
+            throws ConfiguracionInvalidaException {
+
+        if (archivo == null || archivo.isBlank()) {
+            throw new ConfiguracionInvalidaException("Ruta vacía");
+        }
+
+        Path path = Paths.get(archivo);
+
+        if (!Files.exists(path)) {
+            throw new ConfiguracionInvalidaException("No existe: " + archivo);
+        }
+        if (!Files.isReadable(path)) {
+            throw new ConfiguracionInvalidaException("No se puede leer: " + archivo);
+        }
+
+        try {
+            return Files.readString(path);
+        } catch (IOException e) {
+            throw new ConfiguracionInvalidaException("Error leyendo archivo: " + archivo, e);
+        }
+    }
 }
