@@ -1,10 +1,17 @@
 package tech.hellsoft.trading.Cliente;
 
+import java.util.HashMap;
+import java.util.Map;
 import tech.hellsoft.trading.ConectorBolsa;
+import tech.hellsoft.trading.dto.server.BalanceUpdateMessage;
+import tech.hellsoft.trading.dto.server.BroadcastNotificationMessage;
 import tech.hellsoft.trading.dto.server.ErrorMessage;
+import tech.hellsoft.trading.dto.server.EventDeltaMessage;
 import tech.hellsoft.trading.dto.server.FillMessage;
+import tech.hellsoft.trading.dto.server.InventoryUpdateMessage;
 import tech.hellsoft.trading.dto.server.LoginOKMessage;
 import tech.hellsoft.trading.dto.server.OfferMessage;
+import tech.hellsoft.trading.dto.server.OrderAckMessage;
 import tech.hellsoft.trading.dto.server.TickerMessage;
 import tech.hellsoft.trading.eventos.EventListener;
 import tech.hellsoft.trading.exception.ProduccionException.IngredientesInsuficientesException;
@@ -13,25 +20,22 @@ import tech.hellsoft.trading.exception.TradingExceptions.InventarioInsuficienteE
 import tech.hellsoft.trading.exception.TradingExceptions.ProductoNoAutorizadoException;
 import tech.hellsoft.trading.exception.TradingExceptions.SaldoInsuficienteException;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ClienteBolsa implements EventListener {
 
   private final ConectorBolsa conector;
   private final EstadoCliente estado;
   private final Map<String, OfferMessage> ofertas = new HashMap<>();
 
-
-    public ClienteBolsa(ConectorBolsa conector) {
+  public ClienteBolsa(ConectorBolsa conector) {
     this.conector = conector;
     this.estado = new EstadoCliente();
   }
-    public void restaurarEstado(EstadoCliente nuevo) {
-        this.estado.copiarDesde(nuevo);
-    }
 
-    // ========== CALLBACKS DEL SDK ==========
+  public void restaurarEstado(EstadoCliente nuevo) {
+    this.estado.copiarDesde(nuevo);
+  }
+
+  // ========== CALLBACKS DEL SDK ==========
   @Override
   public void onLoginOk(LoginOKMessage msg) {
     if (msg == null) {
@@ -50,11 +54,15 @@ public class ClienteBolsa implements EventListener {
     boolean isBuy = "BUY".equalsIgnoreCase(fill.getSide());
     if (isBuy) {
       estado.getInventario().merge(fill.getProduct(), fill.getFillQty(), Integer::sum);
+      double nuevoSaldo = estado.getSaldo() - fill.getFillQty() * fill.getFillPrice();
+      estado.setSaldo(nuevoSaldo);
     }
     if (!isBuy) {
       estado.getInventario().merge(fill.getProduct(), -fill.getFillQty(), Integer::sum);
+      double nuevoSaldo = estado.getSaldo() + fill.getFillQty() * fill.getFillPrice();
+      estado.setSaldo(nuevoSaldo);
     }
-    System.out.println("P&L: " + estado.calcularPL() + "%");
+    System.out.println("P&L: " + estado.calcularPLPorcentaje() + "%");
   }
 
   @Override
@@ -63,18 +71,19 @@ public class ClienteBolsa implements EventListener {
       return;
     }
     estado.getPreciosActuales().put(ticker.getProduct(), ticker.getMid());
+    estado.getUltimosTickers().put(ticker.getProduct(), ticker);
   }
 
   @Override
   public void onOffer(OfferMessage offer) {
-      if (offer == null) {
-          return;
-      }
-      ofertas.put(offer.getOfferId(), offer);
-      System.out.println("📨 Oferta recibida: " + offer.getOfferId());
+    if (offer == null) {
+      return;
+    }
+    ofertas.put(offer.getOfferId(), offer);
+    System.out.println("📨 Oferta recibida: " + offer.getOfferId());
   }
 
-    @Override
+  @Override
   public void onError(ErrorMessage error) {
     if (error == null) {
       return;
@@ -92,117 +101,129 @@ public class ClienteBolsa implements EventListener {
     System.out.println("⚠ Conexión perdida: " + mensaje);
   }
 
-  // Métodos no utilizados en este stub
   @Override
-  public void onBalanceUpdate(tech.hellsoft.trading.dto.server.BalanceUpdateMessage balanceUpdate) {
+  public void onBalanceUpdate(BalanceUpdateMessage balanceUpdate) {
+    if (balanceUpdate == null) {
+      return;
+    }
+    double balance = balanceUpdate.getBalance();
+    estado.setSaldo(balance);
+    if (estado.getSaldoInicial() == 0) {
+      estado.setSaldoInicial(balance);
+    }
   }
 
   @Override
-  public void onInventoryUpdate(tech.hellsoft.trading.dto.server.InventoryUpdateMessage inventoryUpdate) {
+  public void onInventoryUpdate(InventoryUpdateMessage inventoryUpdate) {
+    if (inventoryUpdate == null) {
+      return;
+    }
+    estado.getInventario().put(inventoryUpdate.getProduct(), inventoryUpdate.getQuantity());
   }
 
   @Override
-  public void onOrderAck(tech.hellsoft.trading.dto.server.OrderAckMessage orderAck) {
+  public void onOrderAck(OrderAckMessage orderAck) {
   }
 
   @Override
-  public void onEventDelta(tech.hellsoft.trading.dto.server.EventDeltaMessage eventDelta) {
+  public void onEventDelta(EventDeltaMessage eventDelta) {
   }
 
   @Override
-  public void onBroadcast(tech.hellsoft.trading.dto.server.BroadcastNotificationMessage broadcast) {
+  public void onBroadcast(BroadcastNotificationMessage broadcast) {
   }
 
   // ========== MÉTODOS PÚBLICOS ==========
   public void comprar(String producto, int cantidad, String mensaje)
           throws SaldoInsuficienteException {
 
-      Double precio = estado.getPreciosActuales().get(producto);
-      if (precio == null) {
-          throw new RuntimeException("No hay precio actual para " + producto);
-      }
+    Double precio = estado.getPreciosActuales().get(producto);
+    if (precio == null) {
+      throw new RuntimeException("No hay precio actual para " + producto);
+    }
 
-      double costo = precio * cantidad * 1.05; // margen 5%
+    double costo = precio * cantidad * 1.05; // margen 5%
 
-      if (estado.getSaldo() < costo) {
-          throw new SaldoInsuficienteException(estado.getSaldo(), costo);
-      }
+    if (estado.getSaldo() < costo) {
+      throw new SaldoInsuficienteException(estado.getSaldo(), costo);
+    }
 
-      // Simulación de envío
-      System.out.println("Orden enviada al servidor (simulada): BUY "
-              + cantidad + " " + producto + " | mensaje=\"" + mensaje + "\"");
+    System.out.println("Orden enviada al servidor (simulada): BUY "
+            + cantidad + " " + producto + " | mensaje=\"" + mensaje + "\"");
   }
 
-    public void vender(String producto, int cantidad, String mensaje)
-            throws InventarioInsuficienteException {
+  public void vender(String producto, int cantidad, String mensaje)
+          throws InventarioInsuficienteException {
 
-        int inv = estado.getInventario().getOrDefault(producto, 0);
+    int inv = estado.getInventario().getOrDefault(producto, 0);
 
-        if (cantidad > inv) {
-            throw new InventarioInsuficienteException(producto, inv, cantidad);
-        }
-
-        // Simulación de envío
-        System.out.println("Orden enviada al servidor (simulada): SELL "
-                + cantidad + " " + producto + " | mensaje=\"" + mensaje + "\"");
+    if (cantidad > inv) {
+      throw new InventarioInsuficienteException(producto, inv, cantidad);
     }
 
-    public void producir(String producto, boolean premium)
-            throws ProductoNoAutorizadoException,
-            RecetaNoEncontradaException,
-            IngredientesInsuficientesException {
+    System.out.println("Orden enviada al servidor (simulada): SELL "
+            + cantidad + " " + producto + " | mensaje=\"" + mensaje + "\"");
+  }
 
-        if (!estado.getProductosAutorizados().contains(producto)) {
-            throw new ProductoNoAutorizadoException(producto, estado.getProductosAutorizados());
-        }
+  public void producir(String producto, boolean premium)
+          throws ProductoNoAutorizadoException,
+          RecetaNoEncontradaException,
+          IngredientesInsuficientesException {
 
-        var receta = estado.getRecetas().get(producto);
-        if (receta == null) {
-            throw new RecetaNoEncontradaException(producto);
-        }
-
-        if (premium) {
-            throw new IngredientesInsuficientesException(null, estado.getInventario());
-        }
-
-        // Producción simple (simulación)
-        int unidades = 1;
-        estado.getInventario().merge(producto, unidades, Integer::sum);
-
-        System.out.println("Producción enviada (simulada): "
-                + unidades + " de " + producto + (premium ? " (premium)" : ""));
-    }
-    // ========== OFERTAS ==========
-    public Map<String, OfferMessage> getOfertas() {
-        return ofertas;
+    if (!estado.getProductosAutorizados().contains(producto)) {
+      throw new ProductoNoAutorizadoException(producto, estado.getProductosAutorizados());
     }
 
-    public boolean tieneOferta(String id) {
-        return ofertas.containsKey(id);
+    var receta = estado.getRecetas().get(producto);
+    if (receta == null) {
+      throw new RecetaNoEncontradaException(producto);
     }
 
-    public OfferMessage getOferta(String id) {
-        return ofertas.get(id);
+    if (premium) {
+      throw new IngredientesInsuficientesException(null, estado.getInventario());
     }
 
-    public void aceptarOferta(String id) {
-        if (!ofertas.containsKey(id)) return;
+    int unidades = 1;
+    estado.getInventario().merge(producto, unidades, Integer::sum);
 
-        conector.aceptarOferta(id);
-        System.out.println("Oferta aceptada: " + id);
-        ofertas.remove(id);
+    System.out.println("Producción enviada (simulada): "
+            + unidades + " de " + producto + (premium ? " (premium)" : ""));
+  }
+
+  // ========== OFERTAS ==========
+  public Map<String, OfferMessage> getOfertas() {
+    return ofertas;
+  }
+
+  public boolean tieneOferta(String id) {
+    return ofertas.containsKey(id);
+  }
+
+  public OfferMessage getOferta(String id) {
+    return ofertas.get(id);
+  }
+
+  public void aceptarOferta(String id) {
+    if (!ofertas.containsKey(id)) {
+      return;
     }
 
-    public void rechazarOferta(String id) {
-        if (!ofertas.containsKey(id)) return;
+    conector.aceptarOferta(id);
+    System.out.println("Oferta aceptada: " + id);
+    ofertas.remove(id);
+  }
 
-        conector.rechazarOferta(id);
-        System.out.println("Oferta rechazada: " + id);
-        ofertas.remove(id);
+  public void rechazarOferta(String id) {
+    if (!ofertas.containsKey(id)) {
+      return;
     }
 
+    conector.rechazarOferta(id);
+    System.out.println("Oferta rechazada: " + id);
+    ofertas.remove(id);
+  }
 
-    public EstadoCliente getEstado() {
-      return estado;
-    }
+  public EstadoCliente getEstado() {
+    return estado;
+  }
 }
