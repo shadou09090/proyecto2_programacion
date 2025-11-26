@@ -1,6 +1,5 @@
 package tech.hellsoft.trading;
 
-import tech.hellsoft.trading.ConectorBolsa;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Scanner;
@@ -51,7 +50,7 @@ public final class Main {
             // Hacemos login; si hay problemas de firmas, pasar null está bien porque ya añadimos el listener.
             // Si tu ConectorBolsa requiere el listener en login y acepta cliente, puedes cambiar a:
             // connector.login(config.apiKey(), cliente);
-            connector.login(config.apiKey(), null);
+            connector.conectar(sss);
 
             System.out.println("✅ Conectado. Esperando eventos de login...");
             System.out.println();
