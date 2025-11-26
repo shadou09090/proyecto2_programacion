@@ -24,7 +24,7 @@ repositories {
 dependencies {
     // Hellsoft SDK - Ready when available
     implementation("tech.hellsoft.trading:websocket-client:1.1.4")
-
+    implementation(files("lib/bolsa-sdk-1.0.jar"))
     // GSON for JSON processing
     implementation("com.google.code.gson:gson:2.10.1")
 

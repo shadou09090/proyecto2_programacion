@@ -13,230 +13,129 @@ import tech.hellsoft.trading.exception.TradingExceptions.InventarioInsuficienteE
 import tech.hellsoft.trading.exception.TradingExceptions.ProductoNoAutorizadoException;
 import tech.hellsoft.trading.exception.TradingExceptions.SaldoInsuficienteException;
 
+
 public class ClienteBolsa implements EventListener {
-
-  private final ConectorBolsa conector;
-  private final EstadoCliente estado;
-  private final Map<String, OfferMessage> ofertas = new HashMap<>();
-
-  public ClienteBolsa(ConectorBolsa conector, EstadoCliente sharedEstado) {
-    this.conector = Objects.requireNonNull(conector, "conector");
-    this.estado = Objects.requireNonNull(sharedEstado, "estado compartido");
-
-  }
-
-  public void restaurarEstado(EstadoCliente nuevo) {
-    this.estado.copiarDesde(nuevo);
-  }
-
-  // ========== CALLBACKS DEL SDK ==========
-  @Override
-  public void onLoginOk(LoginOKMessage msg) {
-    if (msg == null) {
-      return;
+    private ConectorBolsa conector;
+    private EstadoCliente estado;
+    public ClienteBolsa(ConectorBolsa conector) {
+        this.conector = conector;
+        this.estado = new EstadoCliente();
     }
-    estado.setSaldo(msg.getCurrentBalance());
-    estado.setSaldoInicial(msg.getCurrentBalance());
-    System.out.println("✅ Conectado como " + msg.getTeam());
-  }
-
-  @Override
-  public void onFill(FillMessage fill) {
-    if (fill == null) {
-      return;
-    }
-    boolean isBuy = "BUY".equalsIgnoreCase(fill.getSide());
-    if (isBuy) {
-      estado.getInventario().merge(fill.getProduct(), fill.getFillQty(), Integer::sum);
-      double nuevoSaldo = estado.getSaldo() - fill.getFillQty() * fill.getFillPrice();
-      estado.setSaldo(nuevoSaldo);
-    }
-    if (!isBuy) {
-      estado.getInventario().merge(fill.getProduct(), -fill.getFillQty(), Integer::sum);
-      double nuevoSaldo = estado.getSaldo() + fill.getFillQty() * fill.getFillPrice();
-      estado.setSaldo(nuevoSaldo);
-    }
-    System.out.println("P&L: " + estado.calcularPLPorcentaje() + "%");
-  }
-
+    // ========== CALLBACKS DEL SDK ==========
     @Override
-    public void onTicker(TickerMessage ticker) {
-        if (ticker == null) return;
-
-        System.out.println("[DEBUG onTicker] cliente=" + this
-                + " estado.hash=" + System.identityHashCode(estado)
-                + " product=" + ticker.getProduct() + " mid=" + ticker.getMid());
-
-        estado.getPreciosActuales().put(ticker.getProduct(), ticker.getMid());
-        estado.getUltimosTickers().put(ticker.getProduct(), ticker);
+    public void onLoginOk(LoginOk msg) {
+        // Inicializar estado con datos del servidor
+        estado.setSaldo(msg.getSaldoInicial());
+        estado.setSaldoInicial(msg.getSaldoInicial());
+        estado.setRecetas(msg.getRecetas());
+        estado.setRol(msg.getRol());
+        estado.setProductosAutorizados(msg.getProductosAutorizados());
+        System.out.println("✅ Conectado como " + msg.getEquipo());
     }
-
-  @Override
-  public void onOffer(OfferMessage offer) {
-    if (offer == null) {
-      return;
-    }
-    ofertas.put(offer.getOfferId(), offer);
-    System.out.println("📨 Oferta recibida: " + offer.getOfferId());
-  }
-
-  @Override
-  public void onError(ErrorMessage error) {
-    if (error == null) {
-      return;
-    }
-    if ("INVALID_TOKEN".equals(error.getCode())) {
-      System.exit(1);
-      return;
-    }
-    System.err.println("❌ Error: " + error.getReason());
-  }
-
-  @Override
-  public void onConnectionLost(Throwable throwable) {
-    String mensaje = throwable == null ? "Desconocido" : throwable.getMessage();
-    System.out.println("⚠ Conexión perdida: " + mensaje);
-  }
-
     @Override
-    public void onGlobalPerformanceReport(GlobalPerformanceReportMessage globalPerformanceReportMessage) {
-
-    }
-
-    @Override
-  public void onBalanceUpdate(BalanceUpdateMessage balanceUpdate) {
-    if (balanceUpdate == null) {
-      return;
-    }
-    double balance = balanceUpdate.getBalance();
-    estado.setSaldo(balance);
-    if (estado.getSaldoInicial() == 0) {
-      estado.setSaldoInicial(balance);
-    }
-  }
-
-    @Override
-    public void onInventoryUpdate(InventoryUpdateMessage inventoryUpdate) {
-        if (inventoryUpdate == null) {
-            return;
+    public void onFill(Fill fill) {
+        if (fill.getSide().equals("BUY")) {
+            // Restar dinero, sumar inventario
+        } else {
+            // Sumar dinero, restar inventario
         }
-
-        // DEBUG: mostrar que llegó el evento y a qué instancia de EstadoCliente afecta
-        System.out.println("[DEBUG onInventoryUpdate] cliente=" + this
-                + " estado.hash=" + System.identityHashCode(estado)
-                + " product=" + inventoryUpdate.getProduct()
-                + " qty=" + inventoryUpdate.getQuantity());
-
-        // actualizar estado
-        estado.getInventario().put(inventoryUpdate.getProduct(), inventoryUpdate.getQuantity());
-
-        // DEBUG: mostrar inventario resultante
-        System.out.println("[DEBUG afterPut] estado.inventario=" + estado.getInventario());
+        System.out.println("P&L: " + estado.calcularPL() + "%");
+    }
+    @Override
+    public void onTicker(Ticker ticker) {
+        estado.getPreciosActuales().put(ticker.getProducto(), ticker.getMid());
+    }
+    @Override
+    public void onOffer(Offer offer) {
+        // Decidir si aceptar basado en precio y disponibilidad
     }
 
-  @Override
-  public void onOrderAck(OrderAckMessage orderAck) {
-  }
+    @Override
+    public void onLoginOk(LoginOKMessage message) {
 
-  @Override
-  public void onEventDelta(EventDeltaMessage eventDelta) {
-  }
-
-  @Override
-  public void onBroadcast(BroadcastNotificationMessage broadcast) {
-  }
-
-  // ========== MÉTODOS PÚBLICOS ==========
-  public void comprar(String producto, int cantidad, String mensaje)
-          throws SaldoInsuficienteException {
-
-    Double precio = estado.getPreciosActuales().get(producto);
-    if (precio == null) {
-      throw new RuntimeException("No hay precio actual para " + producto);
     }
 
-    double costo = precio * cantidad * 1.05; // margen 5%
+    @Override
+    public void onFill(FillMessage message) {
 
-    if (estado.getSaldo() < costo) {
-      throw new SaldoInsuficienteException(estado.getSaldo(), costo);
     }
 
-    System.out.println("Orden enviada al servidor (simulada): BUY "
-            + cantidad + " " + producto + " | mensaje=\"" + mensaje + "\"");
-  }
+    @Override
+    public void onTicker(TickerMessage message) {
 
-  public void vender(String producto, int cantidad, String mensaje)
-          throws InventarioInsuficienteException {
-
-    int inv = estado.getInventario().getOrDefault(producto, 0);
-
-    if (cantidad > inv) {
-      throw new InventarioInsuficienteException(producto, inv, cantidad);
     }
 
-    System.out.println("Orden enviada al servidor (simulada): SELL "
-            + cantidad + " " + producto + " | mensaje=\"" + mensaje + "\"");
-  }
+    @Override
+    public void onOffer(OfferMessage message) {
 
-  public void producir(String producto, boolean premium)
-          throws ProductoNoAutorizadoException,
-          RecetaNoEncontradaException,
-          IngredientesInsuficientesException {
-
-    if (!estado.getProductosAutorizados().contains(producto)) {
-      throw new ProductoNoAutorizadoException(producto, estado.getProductosAutorizados());
     }
 
-    var receta = estado.getRecetas().get(producto);
-    if (receta == null) {
-      throw new RecetaNoEncontradaException(producto);
+    @Override
+    public void onError(ErrorMessage error) {
+        switch (error.getCodigo()) {
+            case "INVALID_TOKEN":
+                System.exit(1);
+                break;
+            // ... más casos
+        }
     }
 
-    if (premium) {
-      throw new IngredientesInsuficientesException(null, estado.getInventario());
+    @Override
+    public void onOrderAck(OrderAckMessage message) {
+
     }
 
-    int unidades = 1;
-    estado.getInventario().merge(producto, unidades, Integer::sum);
+    @Override
+    public void onInventoryUpdate(InventoryUpdateMessage message) {
 
-    System.out.println("Producción enviada (simulada): "
-            + unidades + " de " + producto + (premium ? " (premium)" : ""));
-  }
-
-  // ========== OFERTAS ==========
-  public Map<String, OfferMessage> getOfertas() {
-    return ofertas;
-  }
-
-  public boolean tieneOferta(String id) {
-    return ofertas.containsKey(id);
-  }
-
-  public OfferMessage getOferta(String id) {
-    return ofertas.get(id);
-  }
-
-  public void aceptarOferta(String id) {
-    if (!ofertas.containsKey(id)) {
-      return;
     }
 
+    @Override
+    public void onBalanceUpdate(BalanceUpdateMessage message) {
 
-    System.out.println("Oferta aceptada: " + id);
-    ofertas.remove(id);
-  }
-
-  public void rechazarOferta(String id) {
-    if (!ofertas.containsKey(id)) {
-      return;
     }
 
+    @Override
+    public void onEventDelta(EventDeltaMessage message) {
 
-    System.out.println("Oferta rechazada: " + id);
-    ofertas.remove(id);
-  }
+    }
 
-  public EstadoCliente getEstado() {
-    return estado;
-  }
+    @Override
+    public void onBroadcast(BroadcastNotificationMessage message) {
+
+    }
+
+    @Override
+    public void onConnectionLost(Throwable error) {
+
+    }
+
+    @Override
+    public void onGlobalPerformanceReport(GlobalPerformanceReportMessage message) {
+
+    }
+
+    @Override
+    public void onConexionPerdida(Exception e) {
+        System.out.println("⚠ Conexión perdida");
+    }
+    // ========== MÉTODOS PÚBLICOS ==========
+    public void comprar(String producto, int cantidad, String mensaje)
+            throws SaldoInsuficienteException {
+        // Validar saldo → lanzar excepción si falla
+        // Crear orden → enviar
+    }
+    public void vender(String producto, int cantidad, String mensaje)
+            throws InventarioInsuficienteException {
+        // Validar inventario → lanzar excepción si falla
+        // Crear orden → enviar
+    }
+    public void producir(String producto, boolean premium)
+            throws ProductoNoAutorizadoException, RecetaNoEncontradaException,
+            IngredientesInsuficientesException {
+        // Validaciones → calcular → actualizar → notificar
+    }
+    public EstadoCliente getEstado() {
+        return estado;
+    }
 }
