@@ -26,7 +26,7 @@ public class ClienteBolsa implements EventListener {
   private final EstadoCliente estado;
   private final Map<String, OfferMessage> ofertas = new HashMap<>();
 
-  public ClienteBolsa(ConectorBolsa conector) {
+  public ClienteBolsa(ConectorBolsa conector, EstadoCliente sharedEstado) {
     this.conector = conector;
     this.estado = new EstadoCliente();
   }
@@ -65,14 +65,17 @@ public class ClienteBolsa implements EventListener {
     System.out.println("P&L: " + estado.calcularPLPorcentaje() + "%");
   }
 
-  @Override
-  public void onTicker(TickerMessage ticker) {
-    if (ticker == null) {
-      return;
+    @Override
+    public void onTicker(TickerMessage ticker) {
+        if (ticker == null) return;
+
+        System.out.println("[DEBUG onTicker] cliente=" + this
+                + " estado.hash=" + System.identityHashCode(estado)
+                + " product=" + ticker.getProduct() + " mid=" + ticker.getMid());
+
+        estado.getPreciosActuales().put(ticker.getProduct(), ticker.getMid());
+        estado.getUltimosTickers().put(ticker.getProduct(), ticker);
     }
-    estado.getPreciosActuales().put(ticker.getProduct(), ticker.getMid());
-    estado.getUltimosTickers().put(ticker.getProduct(), ticker);
-  }
 
   @Override
   public void onOffer(OfferMessage offer) {
@@ -113,13 +116,24 @@ public class ClienteBolsa implements EventListener {
     }
   }
 
-  @Override
-  public void onInventoryUpdate(InventoryUpdateMessage inventoryUpdate) {
-    if (inventoryUpdate == null) {
-      return;
+    @Override
+    public void onInventoryUpdate(InventoryUpdateMessage inventoryUpdate) {
+        if (inventoryUpdate == null) {
+            return;
+        }
+
+        // DEBUG: mostrar que llegó el evento y a qué instancia de EstadoCliente afecta
+        System.out.println("[DEBUG onInventoryUpdate] cliente=" + this
+                + " estado.hash=" + System.identityHashCode(estado)
+                + " product=" + inventoryUpdate.getProduct()
+                + " qty=" + inventoryUpdate.getQuantity());
+
+        // actualizar estado
+        estado.getInventario().put(inventoryUpdate.getProduct(), inventoryUpdate.getQuantity());
+
+        // DEBUG: mostrar inventario resultante
+        System.out.println("[DEBUG afterPut] estado.inventario=" + estado.getInventario());
     }
-    estado.getInventario().put(inventoryUpdate.getProduct(), inventoryUpdate.getQuantity());
-  }
 
   @Override
   public void onOrderAck(OrderAckMessage orderAck) {

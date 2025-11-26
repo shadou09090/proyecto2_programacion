@@ -32,15 +32,56 @@ public final class Main {
             System.out.println("🚀 Starting Trading Bot for team: " + config.team());
             System.out.println();
 
+            // -------------------------------------------------------
+            // Crear EstadoCliente compartido y pasar al ClienteBolsa
+            // para que consola y conector trabajen sobre la misma instancia.
+            // -------------------------------------------------------
+            EstadoCliente sharedEstado = new EstadoCliente();
+
             ConectorBolsa connector = new ConectorBolsa();
-            ClienteBolsa cliente = new ClienteBolsa(connector);
+            ClienteBolsa cliente = new ClienteBolsa(connector, sharedEstado);
+
+            // registrar el cliente como listener en el conector
             connector.addListener(cliente);
 
             System.out.println("🔌 Connecting to: " + config.host());
             connector.conectar(config.host(), config.apiKey());
-            connector.login(config.apiKey(), cliente);
+
+            // Hacemos login; si hay problemas de firmas, pasar null está bien porque ya añadimos el listener.
+            // Si tu ConectorBolsa requiere el listener en login y acepta cliente, puedes cambiar a:
+            // connector.login(config.apiKey(), cliente);
+            connector.login(config.apiKey(), null);
+
             System.out.println("✅ Conectado. Esperando eventos de login...");
             System.out.println();
+
+            // --------------------------
+            // BLOQUE DE PRUEBA (temporal)
+            // Actualiza el EstadoCliente directamente para verificar que la consola
+            // muestra el mismo inventario que la UI/web. Quitar esto cuando verifiques.
+            // --------------------------
+            try {
+                System.out.println("[TEST] Actualizando EstadoCliente manualmente para prueba...");
+
+                EstadoCliente est = cliente.getEstado();
+
+                // ejemplo: dar 10 unidades de H-GUACA y precio mid 5.0
+                est.getInventario().put("H-GUACA", 10);
+                est.getPreciosActuales().put("H-GUACA", 5.0);
+
+                // opcional: ajustar saldo para pruebas de P&L
+                est.setSaldo(1000.0);
+                est.setSaldoInicial(1000.0);
+
+                System.out.println("[TEST] Estado tras actualización: inventario=" + est.getInventario()
+                        + " precios=" + est.getPreciosActuales());
+
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            }
+            // --------------------------
+            // Fin bloque de prueba
+            // --------------------------
 
             runInteractiveCLI(cliente);
 
@@ -52,10 +93,10 @@ public final class Main {
     }
 
     private static void printBanner() {
-        System.out.println("╔══════════════════════════════════════════════════════════╗");
-        System.out.println("║  🥑 Bolsa Interestelar de Aguacates Andorianos 🥑      ║");
-        System.out.println("║  Trading Bot CLI - Java 25 Edition                      ║");
-        System.out.println("╚══════════════════════════════════════════════════════════╝");
+        System.out.println("╔════════════════════════════════════════════════════════════════╗");
+        System.out.println("║  🥑 Bolsa Interestelar de Aguacates Andorianos 🥑              ║");
+        System.out.println("║  Trading Bot CLI - Java 25 Edition                             ║");
+        System.out.println("╚════════════════════════════════════════════════════════════════╝");
         System.out.println();
     }
 
@@ -199,7 +240,7 @@ public final class Main {
         Map<String, TickerMessage> tickers = estado.getUltimosTickers();
 
         System.out.println("\n💹 PRECIOS DE MERCADO");
-        System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
         if (tickers.isEmpty()) {
             System.out.println("(sin tickers recibidos aún)");

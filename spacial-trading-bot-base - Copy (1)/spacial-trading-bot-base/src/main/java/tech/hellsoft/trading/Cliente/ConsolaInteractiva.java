@@ -123,6 +123,10 @@ public class ConsolaInteractiva {
 
     private void handleStatus() {
         EstadoCliente est = cliente.getEstado();
+        System.out.println("[DEBUG Consola.handleStatus] cliente=" + cliente
+                + " cliente.hash=" + System.identityHashCode(cliente)
+                + " estado.hash=" + System.identityHashCode(est)
+                + " inventario.raw=" + est.getInventario());
         double saldo = est.getSaldo();
         double pl = est.calcularPLPorcentaje();
 
@@ -141,6 +145,9 @@ public class ConsolaInteractiva {
 
     private void handleInventario() {
         EstadoCliente est = cliente.getEstado();
+        System.out.println("[DEBUG Consola.handleInventario] cliente=" + cliente
+                + " estado.hash=" + System.identityHashCode(est)
+                + " inventario.raw=" + est.getInventario());
 
         System.out.println("=== INVENTARIO ===");
         if (est.getInventario().isEmpty()) {
