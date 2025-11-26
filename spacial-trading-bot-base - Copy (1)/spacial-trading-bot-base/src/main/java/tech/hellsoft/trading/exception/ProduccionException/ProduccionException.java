@@ -1,7 +1,12 @@
 package tech.hellsoft.trading.exception.ProduccionException;
 
-public abstract class ProduccionException extends RuntimeException {
+public class ProduccionException extends Exception {
+
     public ProduccionException(String message) {
         super(message);
+    }
+
+    public ProduccionException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

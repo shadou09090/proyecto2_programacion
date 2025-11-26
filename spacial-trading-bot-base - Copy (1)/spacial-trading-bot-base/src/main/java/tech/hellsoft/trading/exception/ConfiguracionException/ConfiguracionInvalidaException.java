@@ -1,7 +1,12 @@
 package tech.hellsoft.trading.exception.ConfiguracionException;
 
 public class ConfiguracionInvalidaException extends ConfiguracionException {
+
     public ConfiguracionInvalidaException(String message) {
-        super("ssssssss");
+        super(message);
+    }
+
+    public ConfiguracionInvalidaException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
