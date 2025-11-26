@@ -1,20 +1,12 @@
 package tech.hellsoft.trading.Cliente;
 
+import tech.hellsoft.trading.ConectorBolsa;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import tech.hellsoft.trading.ConectorBolsa;
-import tech.hellsoft.trading.dto.server.BalanceUpdateMessage;
-import tech.hellsoft.trading.dto.server.BroadcastNotificationMessage;
-import tech.hellsoft.trading.dto.server.ErrorMessage;
-import tech.hellsoft.trading.dto.server.EventDeltaMessage;
-import tech.hellsoft.trading.dto.server.FillMessage;
-import tech.hellsoft.trading.dto.server.InventoryUpdateMessage;
-import tech.hellsoft.trading.dto.server.LoginOKMessage;
-import tech.hellsoft.trading.dto.server.OfferMessage;
-import tech.hellsoft.trading.dto.server.OrderAckMessage;
-import tech.hellsoft.trading.dto.server.TickerMessage;
-import tech.hellsoft.trading.eventos.EventListener;
+import tech.hellsoft.trading.EventListener;
+import tech.hellsoft.trading.dto.server.*;
 import tech.hellsoft.trading.exception.ProduccionException.IngredientesInsuficientesException;
 import tech.hellsoft.trading.exception.ProduccionException.RecetaNoEncontradaException;
 import tech.hellsoft.trading.exception.TradingExceptions.InventarioInsuficienteException;
@@ -106,7 +98,12 @@ public class ClienteBolsa implements EventListener {
     System.out.println("⚠ Conexión perdida: " + mensaje);
   }
 
-  @Override
+    @Override
+    public void onGlobalPerformanceReport(GlobalPerformanceReportMessage globalPerformanceReportMessage) {
+
+    }
+
+    @Override
   public void onBalanceUpdate(BalanceUpdateMessage balanceUpdate) {
     if (balanceUpdate == null) {
       return;
