@@ -29,6 +29,7 @@ public class ClienteBolsa implements EventListener {
   public ClienteBolsa(ConectorBolsa conector, EstadoCliente sharedEstado) {
     this.conector = conector;
     this.estado = new EstadoCliente();
+
   }
 
   public void restaurarEstado(EstadoCliente nuevo) {

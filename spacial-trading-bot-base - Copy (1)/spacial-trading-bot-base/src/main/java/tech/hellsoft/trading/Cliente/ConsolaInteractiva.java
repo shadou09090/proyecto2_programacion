@@ -149,6 +149,7 @@ public class ConsolaInteractiva {
                 + " estado.hash=" + System.identityHashCode(est)
                 + " inventario.raw=" + est.getInventario());
 
+
         System.out.println("=== INVENTARIO ===");
         if (est.getInventario().isEmpty()) {
             System.out.println("(vacío)");

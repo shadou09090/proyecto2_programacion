@@ -55,33 +55,7 @@ public final class Main {
             System.out.println("✅ Conectado. Esperando eventos de login...");
             System.out.println();
 
-            // --------------------------
-            // BLOQUE DE PRUEBA (temporal)
-            // Actualiza el EstadoCliente directamente para verificar que la consola
-            // muestra el mismo inventario que la UI/web. Quitar esto cuando verifiques.
-            // --------------------------
-            try {
-                System.out.println("[TEST] Actualizando EstadoCliente manualmente para prueba...");
 
-                EstadoCliente est = cliente.getEstado();
-
-                // ejemplo: dar 10 unidades de H-GUACA y precio mid 5.0
-                est.getInventario().put("H-GUACA", 10);
-                est.getPreciosActuales().put("H-GUACA", 5.0);
-
-                // opcional: ajustar saldo para pruebas de P&L
-                est.setSaldo(1000.0);
-                est.setSaldoInicial(1000.0);
-
-                System.out.println("[TEST] Estado tras actualización: inventario=" + est.getInventario()
-                        + " precios=" + est.getPreciosActuales());
-
-            } catch (Throwable ex) {
-                ex.printStackTrace();
-            }
-            // --------------------------
-            // Fin bloque de prueba
-            // --------------------------
 
             runInteractiveCLI(cliente);
 

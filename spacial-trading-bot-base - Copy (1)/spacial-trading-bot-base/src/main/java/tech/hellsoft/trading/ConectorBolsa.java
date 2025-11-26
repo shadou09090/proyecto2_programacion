@@ -59,6 +59,7 @@ public class ConectorBolsa {
 
     public void simulateBalanceUpdate(BalanceUpdateMessage msg) {
         listeners.forEach(l -> l.onBalanceUpdate(msg));
+
     }
 
     public void simulateInventoryUpdate(InventoryUpdateMessage msg) {

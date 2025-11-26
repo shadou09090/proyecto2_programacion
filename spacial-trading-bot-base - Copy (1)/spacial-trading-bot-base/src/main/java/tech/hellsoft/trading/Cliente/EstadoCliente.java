@@ -38,6 +38,7 @@ public class EstadoCliente implements Serializable {
   public double calcularPLPorcentaje() {
     if (saldoInicial == 0) {
       return 0.0;
+
     }
     return ((calcularPatrimonioNeto() - saldoInicial) / saldoInicial) * 100.0;
   }
