@@ -50,7 +50,7 @@ public final class Main {
             // Hacemos login; si hay problemas de firmas, pasar null está bien porque ya añadimos el listener.
             // Si tu ConectorBolsa requiere el listener en login y acepta cliente, puedes cambiar a:
             // connector.login(config.apiKey(), cliente);
-            connector.login(config.apiKey(), null);
+            connector.login(config.apiKey(), cliente);
 
             System.out.println("✅ Conectado. Esperando eventos de login...");
             System.out.println();

@@ -2,6 +2,7 @@ package tech.hellsoft.trading.Cliente;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import tech.hellsoft.trading.ConectorBolsa;
 import tech.hellsoft.trading.dto.server.BalanceUpdateMessage;
 import tech.hellsoft.trading.dto.server.BroadcastNotificationMessage;
@@ -27,8 +28,8 @@ public class ClienteBolsa implements EventListener {
   private final Map<String, OfferMessage> ofertas = new HashMap<>();
 
   public ClienteBolsa(ConectorBolsa conector, EstadoCliente sharedEstado) {
-    this.conector = conector;
-    this.estado = new EstadoCliente();
+    this.conector = Objects.requireNonNull(conector, "conector");
+    this.estado = Objects.requireNonNull(sharedEstado, "estado compartido");
 
   }
 
