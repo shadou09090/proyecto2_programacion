@@ -322,68 +322,68 @@ public class ConectorBolsa {
     private MessageRouter.MessageHandlers createHandlers() {
         return new MessageRouter.MessageHandlers() {
             {
-                Objects.requireNonNull(tech.hellsoft.trading.ConectorBolsa.this);
+                Objects.requireNonNull(ConectorBolsa.this);
             }
 
             public void onLoginOk(LoginOKMessage message) {
-                tech.hellsoft.trading.ConectorBolsa.this.state = ConnectionState.AUTHENTICATED;
-                tech.hellsoft.trading.ConectorBolsa.log.info("Authenticated as team: {}", message.getTeam());
-                if (tech.hellsoft.trading.ConectorBolsa.this.loginFuture != null) {
-                    tech.hellsoft.trading.ConectorBolsa.this.loginFuture.complete(message);
+                ConectorBolsa.this.state = ConnectionState.AUTHENTICATED;
+                ConectorBolsa.log.info("Authenticated as team: {}", message.getTeam());
+                if (ConectorBolsa.this.loginFuture != null) {
+                    ConectorBolsa.this.loginFuture.complete(message);
                 }
 
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onLoginOk(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onLoginOk(message));
             }
 
             public void onFill(FillMessage message) {
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onFill(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onFill(message));
             }
 
             public void onTicker(TickerMessage message) {
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onTicker(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onTicker(message));
             }
 
             public void onOffer(OfferMessage message) {
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onOffer(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onOffer(message));
             }
 
             public void onError(ErrorMessage message) {
-                if (message.getCode() == ErrorCode.AUTH_FAILED && tech.hellsoft.trading.ConectorBolsa.this.loginFuture != null && !tech.hellsoft.trading.ConectorBolsa.this.loginFuture.isDone()) {
-                    tech.hellsoft.trading.ConectorBolsa.this.loginFuture.completeExceptionally(new RuntimeException("Authentication failed: " + message.getReason()));
+                if (message.getCode() == ErrorCode.AUTH_FAILED && ConectorBolsa.this.loginFuture != null && !ConectorBolsa.this.loginFuture.isDone()) {
+                    ConectorBolsa.this.loginFuture.completeExceptionally(new RuntimeException("Authentication failed: " + message.getReason()));
                 }
 
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onError(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onError(message));
             }
 
             public void onOrderAck(OrderAckMessage message) {
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onOrderAck(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onOrderAck(message));
             }
 
             public void onInventoryUpdate(InventoryUpdateMessage message) {
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onInventoryUpdate(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onInventoryUpdate(message));
             }
 
             public void onBalanceUpdate(BalanceUpdateMessage message) {
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onBalanceUpdate(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onBalanceUpdate(message));
             }
 
             public void onEventDelta(EventDeltaMessage message) {
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onEventDelta(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onEventDelta(message));
             }
 
             public void onBroadcast(BroadcastNotificationMessage message) {
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onBroadcast(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onBroadcast(message));
             }
 
             public void onPong(PongMessage message) {
-                if (tech.hellsoft.trading.ConectorBolsa.this.heartbeatManager != null) {
-                    tech.hellsoft.trading.ConectorBolsa.this.heartbeatManager.onPongReceived();
+                if (ConectorBolsa.this.heartbeatManager != null) {
+                    ConectorBolsa.this.heartbeatManager.onPongReceived();
                 }
 
             }
 
             public void onGlobalPerformanceReport(GlobalPerformanceReportMessage message) {
-                tech.hellsoft.trading.ConectorBolsa.this.notifyListeners((l) -> l.onGlobalPerformanceReport(message));
+                ConectorBolsa.this.notifyListeners((l) -> l.onGlobalPerformanceReport(message));
             }
         };
     }

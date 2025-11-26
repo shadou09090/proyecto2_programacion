@@ -221,7 +221,7 @@ public class ClienteBolsa implements EventListener {
       return;
     }
 
-    conector.aceptarOferta(id);
+
     System.out.println("Oferta aceptada: " + id);
     ofertas.remove(id);
   }
@@ -231,7 +231,7 @@ public class ClienteBolsa implements EventListener {
       return;
     }
 
-    conector.rechazarOferta(id);
+
     System.out.println("Oferta rechazada: " + id);
     ofertas.remove(id);
   }
