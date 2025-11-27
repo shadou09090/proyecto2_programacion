@@ -10,3 +10,4 @@ public class SnapshotCorruptoException extends ConfiguracionException {
         super(message, cause);
     }
 }
+//HOLA

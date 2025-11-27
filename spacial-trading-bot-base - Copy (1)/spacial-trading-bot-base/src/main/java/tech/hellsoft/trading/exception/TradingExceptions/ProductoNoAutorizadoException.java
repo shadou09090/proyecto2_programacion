@@ -16,3 +16,4 @@ public class ProductoNoAutorizadoException extends TradingException {
     public String getProducto() { return producto; }
     public Set<String> getPermitidos() { return permitidos; }
 }
+//HOLA

@@ -18,3 +18,4 @@ public class InventarioInsuficienteException extends TradingException {
     public int getDisponible() { return disponible; }
     public int getSolicitado() { return solicitado; }
 }
+//HOLA

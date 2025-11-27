@@ -10,3 +10,4 @@ public class ConfiguracionException extends Exception {
         super(message, cause);
     }
 }
+//HOLA
